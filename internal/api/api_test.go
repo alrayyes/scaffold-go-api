@@ -1,4 +1,4 @@
-package scaffold_go_api_test
+package api_test
 
 import (
 	"encoding/json"
@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	scaffoldgoapi "github.com/alrayyes/scaffold-go-api"
+	scaffoldgoapi "github.com/alrayyes/scaffold-go-api/internal/api"
 )
 
 func TestHealthAnswersOK(t *testing.T) {

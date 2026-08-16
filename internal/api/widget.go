@@ -1,4 +1,4 @@
-package scaffold_go_api
+package api
 
 import "net/http"
 

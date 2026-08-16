@@ -28,10 +28,12 @@ Full list and what each one does: [CONTRIBUTING.md](CONTRIBUTING.md).
   repo, which this account doesn't have. The PR-only discipline is
   enforced by nobody but whoever's committing — never push straight to
   `main`.
-- **Flat package, on purpose.** Everything importable lives at the module
-  root as `scaffold_go_api`; `cmd/scaffold-go-api` is the only other
-  package. Don't pre-build `internal/domain`/`internal/adapter` — that
-  shape earns its place the day a second resource needs it.
+- **`internal/api` holds the handler, `cmd/scaffold-go-api` starts it.**
+  Per `go.md`'s "a server keeps everything in `internal/` and its commands
+  in `cmd/`" — there's nothing here worth exporting, since the API this
+  service offers is its endpoints, not its Go packages. Don't pre-build
+  `internal/domain`/`internal/adapter` inside that on top of it — that finer
+  split earns its place the day a second resource needs it, not on day one.
 - **The example resource is a placeholder.** `GET /widgets/{id}` exists so
   the spec-first chain (spec, handler, tests, CI) has something real to
   run end to end. A project stamped from this template replaces it with
@@ -39,8 +41,5 @@ Full list and what each one does: [CONTRIBUTING.md](CONTRIBUTING.md).
 - **`LICENSE` is deliberately unpicked.** Don't default it to GPL-3.0 or
   anything else; that's a decision the project stamped from this template
   makes, not this template.
-- **This repo has no `internal/` today**, so `go.md`'s "supporting
-  packages go in `internal/`" only starts applying once there's a second
-  package to hide.
 - **Renovate can't reach this repo.** It's GitHub-primary; Dependabot
   (`.github/dependabot.yml`) is what raises dependency pull requests here.

@@ -57,11 +57,12 @@ bun run lint:mechanics     # ltex-cli-plus
 
 ## How it fits together
 
-One package at the module root — `scaffold_go_api` — holding everything
-worth importing, and `cmd/scaffold-go-api/main.go` as the composition root
-that wires it up and starts the server. No `internal/domain` or
-`internal/adapter` tree: that shape earns its keep the day a second
-resource needs it, not on day one of a template nobody's used yet.
+`internal/api` holds the handler, and `cmd/scaffold-go-api/main.go` is the
+composition root that wires it up and starts the server — per `go.md`'s "a
+server keeps everything in `internal/` and its commands in `cmd/`", since
+there's nothing here worth exporting. No finer `internal/domain`/
+`internal/adapter` split on top of that: that shape earns its keep the day a
+second resource needs it, not on day one of a template nobody's used yet.
 
 ## The contract
 

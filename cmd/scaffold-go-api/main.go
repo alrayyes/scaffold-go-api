@@ -1,7 +1,7 @@
 // Command scaffold-go-api is the composition root for the scaffold's example
 // service: it wires the in-memory widget store to the handlers and starts
 // the server. A project stamped from this template replaces the store with
-// a real one and grows internal/ from there — see CLAUDE.md.
+// a real one and grows internal/api from there — see CLAUDE.md.
 package main
 
 import (
@@ -14,7 +14,7 @@ import (
 	"syscall"
 	"time"
 
-	scaffoldgoapi "github.com/alrayyes/scaffold-go-api"
+	scaffoldgoapi "github.com/alrayyes/scaffold-go-api/internal/api"
 )
 
 // version is stamped in at build time by goreleaser, from the tag. "dev" is
