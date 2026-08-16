@@ -81,13 +81,6 @@ pre-push:
     - name: test
       run: go test ./...
 
-    # go run pins the version in the command itself, so there's nothing
-    # separate to keep in step with ci.yml's twin of this line. Checks the
-    # pinned dependencies for known CVEs; dependencies.md's "Vulnerability
-    # scanning" section is why this exists at all.
-    - name: govulncheck
-      run: go run golang.org/x/vuln/cmd/govulncheck@v1.7.0 ./...
-
     # These are `package.json` scripts rather than the commands spelled out,
     # because CI runs the same ones and a literal copied into two files drifts
     # the first time somebody edits one of them.
