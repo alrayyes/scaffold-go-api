@@ -1,0 +1,13 @@
+# The same commands CI runs, so the two cannot drift. The hook catches it
+# early; CI is the gate that cannot be skipped.
+#
+# Grows a job here the same PR that adds the tool it runs — a linter with no
+# hook is a linter you only meet at CI.
+
+commit-msg:
+  jobs:
+    # Resolved from node_modules rather than fetched by bunx: commitlint has to
+    # load the config its own config extends, and bunx cannot resolve a sibling
+    # package for it. Run `bun install` if this cannot find itself.
+    - name: commitlint
+      run: bunx commitlint --edit {1}
