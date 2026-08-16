@@ -2,6 +2,8 @@
 # holds the prose to exactly these, so casing here is the casing everywhere.
 Dependabot
 GitHub
+Forgejo
+Gitea
 [Gg]oreleaser
 golangci-lint
 lefthook
@@ -30,6 +32,10 @@ repos?
 toolchain
 toolchains
 whoever's
+bot's
+config
+devDependencies
+erroring
 CI
 YAML
 JSON

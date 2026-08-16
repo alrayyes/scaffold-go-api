@@ -3,6 +3,9 @@
   "ltex.dictionary": {
     "en-GB": [
       "Dependabot",
+      "Forgejo",
+      "Gitea",
+      "erroring",
       "OpenAPI",
       "Redocly",
       "Renovate",
@@ -10,6 +13,7 @@
       "bunx",
       "changelog",
       "commitlint",
+      "devDependencies",
       "distroless",
       "goreleaser",
       "golangci",
