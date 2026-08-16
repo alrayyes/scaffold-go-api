@@ -62,6 +62,18 @@ jobs:
           go-version-file: go.mod
       - run: go build ./...
 
+  # No check-only flag on `go mod edit -fmt`, so this is the pre-commit
+  # fixer's twin from lefthook.yml: run it again and diff.
+  gomod:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+      - name: go mod edit -fmt
+        run: go mod edit -fmt go.mod && git diff --exit-code go.mod
+
   dockerfile:
     runs-on: ubuntu-24.04
     steps:

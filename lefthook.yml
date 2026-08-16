@@ -17,6 +17,15 @@ pre-commit:
       glob: "*.go"
       run: golangci-lint run ./...
 
+    # go mod edit -fmt is the canonicalizer for go.mod itself: a builtin `go`
+    # subcommand, not gofmt (which never touches go.mod) and not `go mod tidy`
+    # (which does network resolution a formatting-only hook shouldn't be
+    # doing).
+    - name: gomod
+      glob: "go.mod"
+      run: go mod edit -fmt go.mod
+      stage_fixed: true
+
     # Prettier decides the layout, markdownlint then judges what Prettier
     # produced. The other order has markdownlint fixing something Prettier is
     # about to overwrite.
@@ -80,6 +89,12 @@ pre-push:
   jobs:
     - name: test
       run: go test ./...
+
+    # No check-only flag on `go mod edit -fmt`, so the gate is running it
+    # again and diffing. A no-op on a go.mod pre-commit already canonicalized;
+    # only fails if that got bypassed.
+    - name: gomod
+      run: go mod edit -fmt go.mod && git diff --exit-code go.mod
 
     # These are `package.json` scripts rather than the commands spelled out,
     # because CI runs the same ones and a literal copied into two files drifts
