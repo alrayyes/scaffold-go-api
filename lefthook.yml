@@ -51,6 +51,17 @@ pre-commit:
         - "redocly.yaml"
       run: bunx redocly lint
 
+    # Pinned by digest rather than `latest`, like any other container image —
+    # dependencies.md's rule applies to an image named in a hook command just
+    # as much as one named in the Dockerfile itself.
+    - name: hadolint
+      glob: "Dockerfile"
+      run: >-
+        docker run --rm -i
+        -v "$(pwd)/.hadolint.yaml:/.hadolint.yaml"
+        hadolint/hadolint@sha256:32dac94127fd60b7b7e3fbfc65e1383b9b5e25c9bfd7b8536de7a539fe68a12d
+        < Dockerfile
+
 commit-msg:
   jobs:
     # Resolved from node_modules rather than fetched by bunx: commitlint has to
@@ -94,3 +105,8 @@ pre-push:
 
     - name: redocly
       run: bun run lint:api
+
+    # Proves the image still builds before anyone pushes, without publishing
+    # anything.
+    - name: docker-build
+      run: docker build -t scaffold-go-api:pre-push-check .

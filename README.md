@@ -1,6 +1,7 @@
 # scaffold-go-api
 
 [![CI](https://github.com/alrayyes/scaffold-go-api/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/alrayyes/scaffold-go-api/actions/workflows/ci.yml)
+[![release](https://img.shields.io/github/v/release/alrayyes/scaffold-go-api?sort=semver)](https://github.com/alrayyes/scaffold-go-api/releases/latest)
 [![licence](https://img.shields.io/badge/licence-unlicensed-lightgrey)](LICENSE)
 
 A GitHub template for a Go backend API. Run `gh repo create
