@@ -8,6 +8,15 @@
 # commit should not fail over a quote style a tool can settle by itself.
 pre-commit:
   jobs:
+    - name: gofmt
+      glob: "*.go"
+      run: gofmt -w {staged_files}
+      stage_fixed: true
+
+    - name: golangci-lint
+      glob: "*.go"
+      run: golangci-lint run ./...
+
     # Prettier decides the layout, markdownlint then judges what Prettier
     # produced. The other order has markdownlint fixing something Prettier is
     # about to overwrite.
@@ -58,6 +67,9 @@ commit-msg:
 pre-push:
   parallel: true
   jobs:
+    - name: test
+      run: go test ./...
+
     # These are `package.json` scripts rather than the commands spelled out,
     # because CI runs the same ones and a literal copied into two files drifts
     # the first time somebody edits one of them.
