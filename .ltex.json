@@ -26,6 +26,8 @@
       "rulesets",
       "scaffold-go-api",
       "testify",
+      "toolchain",
+      "toolchains",
       "unexported"
     ]
   },

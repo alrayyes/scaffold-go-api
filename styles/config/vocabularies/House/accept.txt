@@ -26,6 +26,10 @@ healthcheck
 misconfiguration
 misspelt
 fixups
+repos?
+toolchain
+toolchains
+whoever's
 CI
 YAML
 JSON
