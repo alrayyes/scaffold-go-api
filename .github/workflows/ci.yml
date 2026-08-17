@@ -47,7 +47,10 @@ jobs:
         with:
           go-version-file: go.mod
       - name: go test
-        run: go test -race -covermode=atomic -coverprofile=coverage.out ./...
+        # -coverpkg=./..., not the default: without it, coverage only counts
+        # each package's own tests, and a thin handler package under-reports
+        # since the logic it calls lives elsewhere.
+        run: go test -race -covermode=atomic -coverprofile=coverage.out -coverpkg=./... ./...
       - name: Report coverage
         run: |
           go tool cover -func=coverage.out | tail -1 |
