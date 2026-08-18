@@ -12,5 +12,6 @@ linters:
 
 formatters:
   enable:
+    - gci
     - gofmt
     - goimports

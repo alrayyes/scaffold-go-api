@@ -6,9 +6,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/stretchr/testify/require"
-
 	scaffoldgoapi "github.com/alrayyes/scaffold-go-api/internal/api"
+	"github.com/stretchr/testify/require"
 )
 
 func TestHealthAnswersOK(t *testing.T) {
