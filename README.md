@@ -56,6 +56,23 @@ curl localhost:8080/widgets/hammer
 `api/openapi.yaml` is the contract both endpoints are held to — read it
 first if you're replacing the example resource with a real one.
 
+### Docker
+
+The [Dockerfile](Dockerfile) builds a static binary into a distroless,
+non-root image. This repo ships the image but doesn't run it, so the
+runtime hardening `rules/containers.md` asks for lives here rather than in
+a compose file — verified locally, and the binary needs neither a
+capability nor a path to write to:
+
+```sh
+docker build -t scaffold-go-api .
+docker run --rm -p 8080:8080 \
+  --cap-drop=ALL --security-opt=no-new-privileges --read-only \
+  --memory=64m --cpus=0.5 \
+  scaffold-go-api
+curl localhost:8080/healthz
+```
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the toolchain, the hooks, and
