@@ -90,6 +90,12 @@ Every change goes through a pull request — nothing is pushed straight to
 protection needs a paid plan this account doesn't have, so nothing enforces
 that mechanically here; it's discipline, not a gate.
 
+The pull request **title** has to be a valid Conventional Commit too —
+`pr-title.yml` checks it. commitlint only ever reads commit objects, and a
+squash merge defaults its commit message to the pull request title, so this
+is the only check standing between a badly titled pull request and a bad
+message on `main`.
+
 Once a pull request's checks are green, squash-merge it and delete the
 branch. [release-please](https://github.com/googleapis/release-please)
 reads the Conventional Commits on `main` and keeps a release pull request
