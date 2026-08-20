@@ -48,6 +48,8 @@ jobs:
     runs-on: ubuntu-24.04
     permissions:
       contents: write # attaches the binaries to the release
+      id-token: write # mints the Sigstore OIDC token the attestation is signed with
+      attestations: write # publishes the attestation to the repo
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -68,3 +70,12 @@ jobs:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # SLSA Build L2: a signed, Sigstore-backed attestation tying these
+      # exact files to this workflow run. Provenance, not signing — the
+      # archives themselves aren't cosign-signed, a separate decision left
+      # for whenever a real consumer verifies one.
+      - name: attest build provenance
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: "dist/*.tar.gz,dist/checksums.txt"
