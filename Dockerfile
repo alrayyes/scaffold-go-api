@@ -2,7 +2,7 @@
 # the runtime stage. Distroless because the build is static — there's no libc
 # to bring along, and nothing left in the image to exec into if it's ever
 # reached from outside.
-FROM golang:1.26.0-bookworm@sha256:2a0ba12e116687098780d3ce700f9ce3cb340783779646aafbabed748fa6677c AS build
+FROM golang:1.27.0-bookworm@sha256:484ef6066fa69acb059fdfeda7ba2b8f7391f2ef6abc6f9b8411e669ebd56466 AS build
 
 WORKDIR /src
 
