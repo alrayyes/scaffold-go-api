@@ -34,10 +34,18 @@ archives:
 checksum:
   name_template: checksums.txt
 
-# release-please already wrote the notes, curated from the same commits, and
-# created the release carrying them. A second shortlog generated here would
-# put them on twice, and `release.mode: replace` would throw the curated copy
-# away — so the changelog is off and `release.mode` stays at its default,
-# keep-existing. goreleaser is only hanging binaries on a release that exists.
+# Forgejo speaks the Gitea release API, not GitHub's — goreleaser's
+# GitHub-shaped defaults don't resolve here without this block. See
+# FORGEJO.md.
+gitea_urls:
+  api: https://git.higherlearning.eu/api/v1
+  download: https://git.higherlearning.eu
+
+# semantic-release already wrote the notes, curated from the same commits,
+# and created the release carrying them. A second shortlog generated here
+# would put them on twice, and `release.mode: replace` would throw the
+# curated copy away — so the changelog is off and `release.mode` stays at
+# its default, keep-existing. goreleaser is only hanging binaries on a
+# release that exists.
 changelog:
   disable: true

@@ -1,0 +1,70 @@
+name: release
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  release:
+    runs-on: docker
+    container:
+      # bun installs the dependencies, because that's what this repo installs
+      # with — but semantic-release has to run under a real `node`. bun 1.3
+      # reports itself as node v24.3.0, and semantic-release checks the
+      # version it's running under at startup; that's not a check to find a
+      # compatibility gap on, on the one job that pushes to main
+      # (javascript.md). The apk install below puts a real node on PATH.
+      image: oven/bun:1.3.14-alpine@sha256:5acc90a93e91ff07bf72aa90a7c9f0fa189765aec90b47bdbf2152d2196383c0
+      options: --entrypoint ""
+    steps:
+      - run: apk add --no-cache ca-certificates git nodejs
+
+      # fetch-depth: 0 is not optional — semantic-release walks back to the
+      # last tag to work out what to release, and a shallow clone has none.
+      # persist-credentials: false so there's exactly one credential in
+      # play: the run's own automatic token doesn't get left in
+      # .git/config alongside GIT_CREDENTIALS below.
+      - uses: https://code.forgejo.org/actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - run: bun install --frozen-lockfile --ignore-scripts
+
+      # `bun run release` rather than the binary, so this job runs the same
+      # command a workstation dry-run would. bun runs it as a shell command;
+      # the shebang in node_modules/.bin/semantic-release is
+      # `#!/usr/bin/env node`, so node ends up executing it, not bun.
+      - name: Release
+        id: release
+        env:
+          # How semantic-release itself pushes the tag and changelog commit.
+          # It has no Forgejo-specific auth — GH_TOKEN and GL_TOKEN are the
+          # names it knows — so this is the generic form,
+          # "<username>:<password>", and Forgejo takes an access token as
+          # the password half.
+          GIT_CREDENTIALS: "${{ secrets.RELEASE_USER }}:${{ secrets.RELEASE_TOKEN }}"
+          RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        run: |
+          bun run release
+          echo "tag=$(git describe --tags --exact-match HEAD 2>/dev/null || true)" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Go
+        if: steps.release.outputs.tag != ''
+        uses: https://code.forgejo.org/actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      # goreleaser's role is unchanged from the GitHub version of this
+      # workflow: attach binaries to a release that already exists. What's
+      # new on Forgejo is telling it where that release lives — see the
+      # gitea_urls block added to .goreleaser.yml — and a GITEA_TOKEN rather
+      # than GITHUB_TOKEN.
+      - name: goreleaser
+        if: steps.release.outputs.tag != ''
+        uses: https://code.forgejo.org/goreleaser/goreleaser-action@v6
+        with:
+          version: v2.17.1
+          args: release --clean
+        env:
+          GITEA_TOKEN: ${{ secrets.RELEASE_TOKEN }}

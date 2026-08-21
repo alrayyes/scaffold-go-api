@@ -1,12 +1,13 @@
 # scaffold-go-api
 
-[![CI](https://github.com/alrayyes/scaffold-go-api/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/alrayyes/scaffold-go-api/actions/workflows/ci.yml)
-[![release](https://img.shields.io/github/v/release/alrayyes/scaffold-go-api?sort=semver)](https://github.com/alrayyes/scaffold-go-api/releases/latest)
+[![CI](https://git.higherlearning.eu/alrayyes/scaffold-go-api/actions/workflows/ci.yml/badge.svg)](https://git.higherlearning.eu/alrayyes/scaffold-go-api/actions)
+[![release](https://img.shields.io/gitea/v/release/alrayyes/scaffold-go-api?gitea_url=https%3A%2F%2Fgit.higherlearning.eu&sort=semver)](https://git.higherlearning.eu/alrayyes/scaffold-go-api/releases)
 [![licence](https://img.shields.io/badge/licence-unlicensed-lightgrey)](LICENSE)
 
-A GitHub template for a Go backend API. Run `gh repo create
-my-real-project --template alrayyes/scaffold-go-api` and you get a
-project with the conventions already wired in — pinned tooling, a
+A Forgejo template for a Go backend API. Generate a project from it
+(Settings → repository → "Generate a new repo" on `scaffold-go-api`, or
+`POST /repos/alrayyes/scaffold-go-api/generate` against the API) and you get
+a project with the conventions already wired in — pinned tooling, a
 spec-first OpenAPI layout, prose linting, secret scanning, and release
 automation — rather than a blank directory and a checklist to work
 through by hand.
@@ -16,9 +17,10 @@ It isn't a product on its own. The one endpoint it ships,
 hooks, CI — has something real to run against. Replace it with your
 first real resource and delete this paragraph.
 
-The preceding tooling defaults to GitHub: release-please, Dependabot,
-`.github/workflows/`. Stamping a project onto Forgejo instead? See
-[FORGEJO.md](FORGEJO.md) for what to swap in.
+Hosted here on Forgejo: semantic-release, Renovate, `.forgejo/workflows/`.
+See [FORGEJO.md](FORGEJO.md) for the reasoning and the GitHub-hosted
+alternative for each, if a project stamped from this template ever needs
+to move there instead.
 
 ## Requirements
 
@@ -35,7 +37,7 @@ The preceding tooling defaults to GitHub: release-please, Dependabot,
 ## Installation
 
 ```sh
-git clone https://github.com/alrayyes/scaffold-go-api.git
+git clone https://git.higherlearning.eu/alrayyes/scaffold-go-api.git
 cd scaffold-go-api
 go build ./cmd/scaffold-go-api
 ```

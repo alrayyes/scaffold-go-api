@@ -18,15 +18,14 @@ on:
       - .vale.ini
       - .ltex.json
       - styles/**
-      - .github/workflows/prose.yml
+      - .forgejo/workflows/prose.yml
   pull_request:
     paths:
       - "**/*.md"
       - .vale.ini
       - .ltex.json
       - styles/**
-      - .github/workflows/prose.yml
-  workflow_dispatch:
+      - .forgejo/workflows/prose.yml
 
 permissions:
   contents: read
@@ -46,35 +45,34 @@ jobs:
   # Mechanics: grammar, spelling, the phonetic article. These have a right
   # answer, so this one fails the build.
   mechanics:
-    runs-on: ubuntu-24.04
+    runs-on: docker
+    container:
+      image: golang:1.26-bookworm@sha256:6ef6e30f0ea5c384f6d111cf856e024e3086bbdcb1779da3f3b3fbba0aea53d2
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
+      - run: apt-get update && apt-get install -y --no-install-recommends ca-certificates git nodejs
+      - uses: https://code.forgejo.org/actions/checkout@v4
       - name: Check the prose this repository owns
         # The same script the pre-push hook runs, so the two cannot disagree
         # about the version, the file list or what counts as a failure.
         run: ./scripts/lint-mechanics.sh
 
   style:
-    runs-on: ubuntu-24.04
+    runs-on: docker
+    container:
+      image: golang:1.26-bookworm@sha256:6ef6e30f0ea5c384f6d111cf856e024e3086bbdcb1779da3f3b3fbba0aea53d2
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
-        with:
-          go-version-file: go.mod
-
+      - run: apt-get update && apt-get install -y --no-install-recommends ca-certificates git nodejs
+      - uses: https://code.forgejo.org/actions/checkout@v4
       - name: Install Vale
         env:
           GOTOOLCHAIN: auto
         run: go install github.com/errata-ai/vale/v3/cmd/vale@${{ env.VALE_VERSION }}
-
       - name: Vale
         # The same script the pre-push hook runs, so the two cannot check
         # different files or disagree about what's worth failing on.
         env:
           VALE_REPORT: vale.txt
         run: ./scripts/lint-prose.sh
-
       - name: Report
         if: always()
         run: |
