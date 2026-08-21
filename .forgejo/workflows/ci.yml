@@ -84,50 +84,29 @@ jobs:
       - name: go mod edit -fmt
         run: go mod edit -fmt go.mod && git diff --exit-code go.mod
 
-  # Docker-outside-of-Docker: the job container gets the host's own docker
-  # socket rather than running a nested daemon, since Forgejo's `runs-on:
-  # docker` jobs run inside a container to begin with (unlike GitHub's
-  # `ubuntu-24.04`, a bare VM with Docker preinstalled). Whether the actual
-  # runner behind this instance permits the socket mount is a property of
-  # that runner's own config (FORGEJO.md's `valid_volumes` note) — if these
-  # two jobs fail on a permission or missing-socket error rather than a real
-  # Dockerfile/build problem, that's the runner, not this workflow.
+  # hadolint runs as the job's own container rather than via `docker run`
+  # from inside another one — no Docker-outside-of-Docker needed at all.
+  # Must be the `-alpine` tag specifically: the default hadolint image is
+  # `FROM scratch`, no shell, and can't run a checkout step. Same pattern
+  # already proven on this instance for gitleaks/biome/bats-style jobs.
   dockerfile:
     runs-on: docker
     container:
-      image: docker:27-cli@sha256:851f91d241214e7c6db86513b270d58776379aacc5eb9c4a87e5b47115e3065c
-      # `options:` maps to extra `docker create` flags, not a bind mount —
-      # `volumes:` is the container job schema's actual field for a
-      # host-socket Docker-outside-of-Docker mount. The first attempt used
-      # `options: -v ...` and both this job and `docker` below failed;
-      # switching to `volumes:` is the fix being tried here.
-      volumes:
-        - /var/run/docker.sock:/var/run/docker.sock
+      image: hadolint/hadolint:v2.15.1-alpine@sha256:a1d49ae1a4e83c1dbad26b8c1ad7588c8bd1e04f4866b34ad3cac50335198552
     steps:
-      - run: apk add --no-cache ca-certificates git nodejs
+      - run: apk add --no-cache nodejs
       - uses: https://code.forgejo.org/actions/checkout@v4
-      - name: hadolint
-        # The same pinned digest the pre-commit hook and GitHub's workflow
-        # ran.
-        run: >-
-          docker run --rm -i
-          -v ${{ github.workspace }}/.hadolint.yaml:/.hadolint.yaml
-          hadolint/hadolint@sha256:32dac94127fd60b7b7e3fbfc65e1383b9b5e25c9bfd7b8536de7a539fe68a12d
-          < Dockerfile
+      - run: hadolint Dockerfile
 
-  # Proves the image still builds before anyone merges, without publishing
-  # anything. There's no registry to push it to — this template doesn't wire
-  # one up; a project stamped from it adds that the day it needs one.
-  docker:
-    runs-on: docker
-    container:
-      image: docker:27-cli@sha256:851f91d241214e7c6db86513b270d58776379aacc5eb9c4a87e5b47115e3065c
-      volumes:
-        - /var/run/docker.sock:/var/run/docker.sock
-    steps:
-      - run: apk add --no-cache ca-certificates git nodejs
-      - uses: https://code.forgejo.org/actions/checkout@v4
-      - run: docker build .
+  # There is no proven pattern on this instance yet for a job that drives
+  # `docker build`/`docker run` itself (as opposed to hadolint's own
+  # container, above) — Docker-outside-of-Docker via a socket mount failed
+  # here, and the dind gateway-IP trick used elsewhere on this account is
+  # confirmed only for reaching a daemon over TCP from inside a test
+  # (andthensome/homepage), not for driving the CLI directly. Dropped rather
+  # than shipped broken or guessed at further; re-add once a real working
+  # pattern exists. `hadolint` above still catches most Dockerfile mistakes
+  # without it.
 
   # Layout and structure. Style and mechanics are prose.yml — see its header
   # comment for why they're split out.
@@ -141,8 +120,13 @@ jobs:
       - uses: https://code.forgejo.org/actions/checkout@v4
       - name: bun install
         # Frozen, so a drifted lockfile fails the job rather than silently
-        # resolving to something nobody committed.
-        run: bun install --frozen-lockfile
+        # resolving to something nobody committed. --ignore-scripts skips
+        # the `prepare` script (`lefthook install`) — hooks are a local dev
+        # convenience with nothing to do in a one-shot CI container, and
+        # running it here fails outright on these images. Same fix already
+        # proven working on this instance in homelab/vps-docker's lint.yml
+        # `format` job.
+        run: bun install --frozen-lockfile --ignore-scripts
       - name: prettier --check
         run: bun run format:check
       - name: markdownlint
@@ -159,7 +143,7 @@ jobs:
     steps:
       - run: apk add --no-cache ca-certificates git nodejs
       - uses: https://code.forgejo.org/actions/checkout@v4
-      - run: bun install --frozen-lockfile
+      - run: bun install --frozen-lockfile --ignore-scripts
       - name: redocly lint
         run: bun run lint:api
 
@@ -176,7 +160,7 @@ jobs:
       - uses: https://code.forgejo.org/actions/checkout@v4
         with:
           fetch-depth: 0
-      - run: bun install --frozen-lockfile
+      - run: bun install --frozen-lockfile --ignore-scripts
       - name: commitlint
         run: |
           bunx commitlint \

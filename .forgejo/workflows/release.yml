@@ -29,7 +29,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - run: bun install --frozen-lockfile
+      - run: bun install --frozen-lockfile --ignore-scripts
 
       # `bun run release` rather than the binary, so this job runs the same
       # command a workstation dry-run would. bun runs it as a shell command;

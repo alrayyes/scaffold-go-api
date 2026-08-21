@@ -27,7 +27,7 @@ jobs:
     steps:
       - run: apk add --no-cache ca-certificates git nodejs
       - uses: https://code.forgejo.org/actions/checkout@v4
-      - run: bun install --frozen-lockfile
+      - run: bun install --frozen-lockfile --ignore-scripts
       - name: commitlint the pull request title
         # Reuses the same config the commit-message hook and the commits
         # job in ci.yml check against, so the two cannot disagree about
