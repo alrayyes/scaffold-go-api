@@ -86,9 +86,9 @@ what it checks, so hold to them anyway.
 ## Branching, review, and release
 
 Every change goes through a pull request — nothing is pushed straight to
-`main`, including the bootstrapping that built this repo. GitHub's branch
-protection needs a paid plan this account doesn't have, so nothing enforces
-that mechanically here; it's discipline, not a gate.
+`main`. Forgejo's branch protection is free even on a private repo, unlike
+GitHub's, but isn't turned on here yet; until it is, nothing enforces that
+mechanically, it's discipline, not a gate.
 
 The pull request **title** has to be a valid Conventional Commit too —
 `pr-title.yml` checks it. commitlint only ever reads commit objects, and a
@@ -97,8 +97,9 @@ is the only check standing between a badly titled pull request and a bad
 message on `main`.
 
 Once a pull request's checks are green, squash-merge it and delete the
-branch. [release-please](https://github.com/googleapis/release-please)
-reads the Conventional Commits on `main` and keeps a release pull request
-open with the next version and changelog entry; merging that one tags the
-release, and [goreleaser](https://goreleaser.com) builds the binaries onto
-it. Nobody picks a version by hand.
+branch. [semantic-release](https://semantic-release.gitbook.io/) reads the
+Conventional Commits on `main` and, on the next push, tags the release and
+writes its notes directly — there's no release pull request to merge, unlike
+release-please's GitHub-only flow. [goreleaser](https://goreleaser.com)
+then builds the binaries onto the release semantic-release just cut. Nobody
+picks a version by hand.
