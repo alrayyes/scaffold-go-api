@@ -38,7 +38,7 @@ jobs:
           else
             apt-get update && apt-get install -y --no-install-recommends ca-certificates git nodejs
           fi
-      - uses: https://code.forgejo.org/actions/checkout@v4
+      - uses: https://code.forgejo.org/actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: golangci-lint
         run: golangci-lint run
       - name: gofmt
@@ -52,7 +52,7 @@ jobs:
       image: golang:1.26-bookworm@sha256:6ef6e30f0ea5c384f6d111cf856e024e3086bbdcb1779da3f3b3fbba0aea53d2
     steps:
       - run: apt-get update && apt-get install -y --no-install-recommends ca-certificates git nodejs
-      - uses: https://code.forgejo.org/actions/checkout@v4
+      - uses: https://code.forgejo.org/actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: go test
         # -coverpkg=./..., not the default: without it, coverage only counts
         # each package's own tests, and a thin handler package under-reports
@@ -69,7 +69,7 @@ jobs:
       image: golang:1.26-bookworm@sha256:6ef6e30f0ea5c384f6d111cf856e024e3086bbdcb1779da3f3b3fbba0aea53d2
     steps:
       - run: apt-get update && apt-get install -y --no-install-recommends ca-certificates git nodejs
-      - uses: https://code.forgejo.org/actions/checkout@v4
+      - uses: https://code.forgejo.org/actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - run: go build ./...
 
   # No check-only flag on `go mod edit -fmt`, so this is the pre-commit
@@ -80,7 +80,7 @@ jobs:
       image: golang:1.26-bookworm@sha256:6ef6e30f0ea5c384f6d111cf856e024e3086bbdcb1779da3f3b3fbba0aea53d2
     steps:
       - run: apt-get update && apt-get install -y --no-install-recommends ca-certificates git nodejs
-      - uses: https://code.forgejo.org/actions/checkout@v4
+      - uses: https://code.forgejo.org/actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: go mod edit -fmt
         run: go mod edit -fmt go.mod && git diff --exit-code go.mod
 
@@ -95,7 +95,7 @@ jobs:
       image: hadolint/hadolint:v2.15.1-alpine@sha256:a1d49ae1a4e83c1dbad26b8c1ad7588c8bd1e04f4866b34ad3cac50335198552
     steps:
       - run: apk add --no-cache nodejs
-      - uses: https://code.forgejo.org/actions/checkout@v4
+      - uses: https://code.forgejo.org/actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - run: hadolint Dockerfile
 
   # There is no proven pattern on this instance yet for a job that drives
@@ -117,7 +117,7 @@ jobs:
       options: --entrypoint ""
     steps:
       - run: apk add --no-cache ca-certificates git nodejs
-      - uses: https://code.forgejo.org/actions/checkout@v4
+      - uses: https://code.forgejo.org/actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: bun install
         # Frozen, so a drifted lockfile fails the job rather than silently
         # resolving to something nobody committed. --ignore-scripts skips
@@ -142,7 +142,7 @@ jobs:
       options: --entrypoint ""
     steps:
       - run: apk add --no-cache ca-certificates git nodejs
-      - uses: https://code.forgejo.org/actions/checkout@v4
+      - uses: https://code.forgejo.org/actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - run: bun install --frozen-lockfile --ignore-scripts
       - name: redocly lint
         run: bun run lint:api
@@ -157,7 +157,7 @@ jobs:
       options: --entrypoint ""
     steps:
       - run: apk add --no-cache ca-certificates git nodejs
-      - uses: https://code.forgejo.org/actions/checkout@v4
+      - uses: https://code.forgejo.org/actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 0
       - run: bun install --frozen-lockfile --ignore-scripts
