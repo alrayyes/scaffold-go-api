@@ -192,19 +192,18 @@ jobs:
       # new on Forgejo is telling it where that release lives — goreleaser's
       # GitHub-shaped defaults don't apply here, so it needs an explicit
       # `gitea:` block naming the API host (Forgejo speaks the Gitea release
-      # API) and a GITEA_TOKEN rather than GITHUB_TOKEN. This part hasn't
-      # been proved end-to-end against a real Go release the way the
-      # semantic-release job above has (the reference setup this doc draws
-      # from has no Go binary to release) — verify it against goreleaser's
-      # own gitea docs before trusting it blind.
+      # API) and a GITEA_TOKEN rather than GITHUB_TOKEN. goreleaser-action
+      # itself isn't mirrored to code.forgejo.org — `git ls-remote` against
+      # it 404s — so this installs the binary directly instead. Proved
+      # end-to-end against a real Go release: it's the same fix
+      # scaffold-go-cli's release workflow already runs in production.
       - name: goreleaser
         if: steps.release.outputs.tag != ''
-        uses: https://code.forgejo.org/goreleaser/goreleaser-action@v6
-        with:
-          version: v2.17.1
-          args: release --clean
         env:
           GITEA_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        run: |
+          go install github.com/goreleaser/goreleaser/v2@v2.17.1
+          goreleaser release --clean
 ```
 
 Add `gitea:` to `.goreleaser.yml` so it knows which API to call:
