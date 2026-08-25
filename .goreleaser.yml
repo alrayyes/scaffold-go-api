@@ -41,6 +41,12 @@ gitea_urls:
   api: https://git.higherlearning.eu/api/v1
   download: https://git.higherlearning.eu
 
+# The Forgejo runner exports its own GITHUB_TOKEN for GitHub-Actions
+# compatibility, alongside the GITEA_TOKEN the release workflow sets —
+# goreleaser refuses to guess between them ("multiple tokens found, but
+# only one is allowed") without this.
+force_token: gitea
+
 # semantic-release already wrote the notes, curated from the same commits,
 # and created the release carrying them. A second shortlog generated here
 # would put them on twice, and `release.mode: replace` would throw the

@@ -194,9 +194,7 @@ jobs:
       # `gitea:` block naming the API host (Forgejo speaks the Gitea release
       # API) and a GITEA_TOKEN rather than GITHUB_TOKEN. goreleaser-action
       # itself isn't mirrored to code.forgejo.org — `git ls-remote` against
-      # it 404s — so this installs the binary directly instead. Proved
-      # end-to-end against a real Go release: it's the same fix
-      # scaffold-go-cli's release workflow already runs in production.
+      # it 404s — so this installs the binary directly instead.
       - name: goreleaser
         if: steps.release.outputs.tag != ''
         env:
@@ -206,12 +204,17 @@ jobs:
           goreleaser release --clean
 ```
 
-Add `gitea:` to `.goreleaser.yml` so it knows which API to call:
+Add `gitea:` to `.goreleaser.yml` so it knows which API to call. The
+Forgejo runner also exports its own GITHUB_TOKEN for GitHub-Actions
+compatibility, alongside the GITEA_TOKEN above — goreleaser refuses to
+guess between them ("multiple tokens found, but only one is allowed")
+without `force_token`:
 
 ```yaml
 gitea_urls:
   api: https://forgejo.example.com/api/v1
   download: https://forgejo.example.com
+force_token: gitea
 ```
 
 Secrets to set under Settings → Actions → Secrets: `RELEASE_USER` (the
