@@ -1,8 +1,9 @@
-# Disabled (.yml.disabled, not .yml) because this is a template nobody
-# deploys - verified working once (all checks green, v0.2.0 released), then
-# turned off so it doesn't keep opening PRs against a repo nothing actually
-# runs. Rename back to dependabot.yml the day this gets cloned to bootstrap
-# a real project - that's when dependency updates start mattering again.
+# Runs even though nothing deploys from this repo: a dependency bump that
+# needs a config change on our side - a new default, a breaking flag, a
+# moved setting - surfaces here, on the template, instead of on day one of
+# the first real project cloned from it. Costs nothing to leave on either:
+# public repos get unlimited GitHub Actions minutes, so there's no metering
+# concern the way a private repo would have.
 #
 # Dependabot raises the pull request; CI decides whether it lands. Everything
 # here is pinned to an exact version, which is the whole reason this works —
