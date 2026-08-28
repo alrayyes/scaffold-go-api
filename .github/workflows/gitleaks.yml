@@ -21,18 +21,22 @@ env:
 
 jobs:
   secrets:
-    runs-on: docker
-    container:
-      image: golang:1.27-bookworm@sha256:ded31c68586d2e49e760acc2e65a884b23d032e9bbbed0ae0c55abd3fcaf4452
+    runs-on: ubuntu-24.04
     steps:
-      - run: apt-get update && apt-get install -y --no-install-recommends ca-certificates git nodejs
       # fetch-depth: 0, or there's no history to walk and the job passes
       # having scanned nothing.
-      - uses: https://code.forgejo.org/actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
       - name: Install gitleaks
         # The module's import path is zricethezav/gitleaks; gitleaks/gitleaks
         # is only where the repository lives on GitHub.
         run: go install github.com/zricethezav/gitleaks/v8@${{ env.GITLEAKS_VERSION }}
+      # Scoped to branches and tags rather than every ref, matching
+      # Ryankes.eu/main's ci.yml: GitHub keeps a permanent refs/pull/<n>/head
+      # per pull request, which a rewritten history would still leave
+      # pointing at pre-rewrite commits.
       - run: gitleaks git --redact --no-banner --log-opts="--branches --tags" .
