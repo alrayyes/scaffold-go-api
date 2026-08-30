@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/alrayyes/scaffold-go-api/compare/v0.2.0...v0.3.0) (2026-08-30)
+
+
+### Features
+
+* **ci:** upload coverage to Codecov ([#6](https://github.com/alrayyes/scaffold-go-api/issues/6)) ([e683266](https://github.com/alrayyes/scaffold-go-api/commit/e6832669b97846d265610c8b5ae9015dbdc9c25c))
+
 ## [0.2.0](https://github.com/alrayyes/scaffold-go-api/compare/v0.1.0...v0.2.0) (2026-08-28)
 
 
