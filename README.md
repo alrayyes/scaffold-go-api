@@ -1,6 +1,7 @@
 # scaffold-go-api
 
 [![CI](https://github.com/alrayyes/scaffold-go-api/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/alrayyes/scaffold-go-api/actions/workflows/ci.yml)
+[![Codecov](https://codecov.io/gh/alrayyes/scaffold-go-api/graph/badge.svg)](https://codecov.io/gh/alrayyes/scaffold-go-api)
 [![release](https://img.shields.io/github/v/release/alrayyes/scaffold-go-api?sort=semver)](https://github.com/alrayyes/scaffold-go-api/releases/latest)
 [![licence](https://img.shields.io/badge/licence-unlicensed-lightgrey)](LICENSE)
 
