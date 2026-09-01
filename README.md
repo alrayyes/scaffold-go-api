@@ -17,10 +17,6 @@ It isn't a product on its own. The one endpoint it ships,
 hooks, CI — has something real to run against. Replace it with your
 first real resource and delete this paragraph.
 
-The preceding tooling defaults to GitHub: release-please, Dependabot,
-`.github/workflows/`. Stamping a project onto Forgejo instead? See
-[FORGEJO.md](FORGEJO.md) for what to swap in.
-
 ## Requirements
 
 - **Go 1.25 or newer.**
