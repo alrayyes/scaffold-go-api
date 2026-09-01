@@ -5,6 +5,7 @@ Codecov
 GitHub
 Forgejo
 Gitea
+Sigstore
 [Gg]oreleaser
 golangci-lint
 lefthook
@@ -17,10 +18,16 @@ Redocly
 Renovate
 OpenAPI
 allowlist
+autodiscovered
+automerge
 changelog
+dind
+hardcode
+npm
 ruleset
 rulesets
 runbook
+shortlog
 unexported
 unmergeable
 Dockerfile
@@ -33,6 +40,7 @@ repos?
 toolchain
 toolchains
 whoever's
+whatever's
 bot's
 config
 devDependencies
