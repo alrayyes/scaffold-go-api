@@ -17,6 +17,11 @@ permissions:
   pull-requests: read
   statuses: write
 
+# A second push to the same pull request makes the first run pointless.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   check:
     runs-on: ubuntu-24.04
