@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/alrayyes/scaffold-go-api/compare/v0.3.0...v0.3.1) (2026-09-09)
+
+
+### Bug Fixes
+
+* **deps:** downgrade bun.lock to lockfileVersion 1 for Dependabot ([#23](https://github.com/alrayyes/scaffold-go-api/issues/23)) ([30cb0ff](https://github.com/alrayyes/scaffold-go-api/commit/30cb0ff933f6b6ab58af4f12e1c68749893b164c))
+
 ## [0.3.0](https://github.com/alrayyes/scaffold-go-api/compare/v0.2.0...v0.3.0) (2026-08-30)
 
 
