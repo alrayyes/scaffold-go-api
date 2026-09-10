@@ -4,6 +4,7 @@
 /scaffold-go-api
 /dist
 coverage.out
+junit.xml
 
 node_modules/
 .bun-cache/
