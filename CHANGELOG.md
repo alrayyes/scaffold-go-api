@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/alrayyes/scaffold-go-api/compare/v0.4.0...v0.4.1) (2026-09-10)
+
+
+### Bug Fixes
+
+* **ci:** report_type is underscore-separated, not report-type ([#35](https://github.com/alrayyes/scaffold-go-api/issues/35)) ([ec61150](https://github.com/alrayyes/scaffold-go-api/commit/ec61150145c4d6d9bfea7cee3e8780721f283840))
+
 ## [0.4.0](https://github.com/alrayyes/scaffold-go-api/compare/v0.3.1...v0.4.0) (2026-09-10)
 
 
