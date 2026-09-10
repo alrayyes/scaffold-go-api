@@ -64,8 +64,15 @@ jobs:
         run: |
           go tool cover -func=coverage.out | tail -1 |
             awk '{ print "**Coverage: " $3 "**" }' >> "$GITHUB_STEP_SUMMARY"
+      # GitHub withholds repository Actions secrets from Dependabot-triggered
+      # runs entirely, pull_request vs. pull_request_target notwithstanding
+      # — only a separate "Dependabot secrets" store reaches them, and this
+      # repo doesn't keep a second copy of CODECOV_TOKEN there. Skip rather
+      # than upload with an empty token: fail_ci_if_error would otherwise
+      # turn that into a permanently red check no Dependabot PR can pass,
+      # which blocks dependabot-auto-merge.yml's gate for good.
       - name: Upload coverage to Codecov
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && github.actor != 'dependabot[bot]' }}
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -74,7 +81,7 @@ jobs:
       # Analytics exists to explain, and a job that stops at the first
       # failing test never reaches an upload step gated behind success.
       - name: Upload test results to Codecov
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && github.actor != 'dependabot[bot]' }}
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
