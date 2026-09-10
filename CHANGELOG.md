@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.2](https://github.com/alrayyes/scaffold-go-api/compare/v0.4.1...v0.4.2) (2026-09-10)
+
+
+### Bug Fixes
+
+* **ci:** skip Codecov upload on Dependabot-triggered test runs ([#38](https://github.com/alrayyes/scaffold-go-api/issues/38)) ([b40426c](https://github.com/alrayyes/scaffold-go-api/commit/b40426ca7fb59b4d57a7c9fbc6528e23e03389f2)), closes [#37](https://github.com/alrayyes/scaffold-go-api/issues/37)
+
 ## [0.4.1](https://github.com/alrayyes/scaffold-go-api/compare/v0.4.0...v0.4.1) (2026-09-10)
 
 
