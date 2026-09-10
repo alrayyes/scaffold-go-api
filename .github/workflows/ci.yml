@@ -52,15 +52,41 @@ jobs:
         # -coverpkg=./..., not the default: without it, coverage only counts
         # each package's own tests, and a thin handler package under-reports
         # since the logic it calls lives elsewhere.
-        run: go test -race -covermode=atomic -coverprofile=coverage.out -coverpkg=./... ./...
+        #
+        # gotestsum instead of a bare `go test`, pinned exactly: same human
+        # output as before, plus a JUnit report Codecov's Test Analytics
+        # reads for failure/flake history.
+        run: |
+          go run gotest.tools/gotestsum@v1.13.0 --junitfile junit.xml -- \
+            -race -covermode=atomic -coverprofile=coverage.out -coverpkg=./... ./...
       - name: Report coverage
+        if: ${{ !cancelled() }}
         run: |
           go tool cover -func=coverage.out | tail -1 |
             awk '{ print "**Coverage: " $3 "**" }' >> "$GITHUB_STEP_SUMMARY"
+      # GitHub withholds repository Actions secrets from Dependabot-triggered
+      # runs entirely, pull_request vs. pull_request_target notwithstanding
+      # — only a separate "Dependabot secrets" store reaches them, and this
+      # repo doesn't keep a second copy of CODECOV_TOKEN there. Skip rather
+      # than upload with an empty token: fail_ci_if_error would otherwise
+      # turn that into a permanently red check no Dependabot PR can pass,
+      # which blocks dependabot-auto-merge.yml's gate for good.
       - name: Upload coverage to Codecov
+        if: ${{ !cancelled() && github.actor != 'dependabot[bot]' }}
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+      # Run even when tests fail - a red PR is exactly the case Test
+      # Analytics exists to explain, and a job that stops at the first
+      # failing test never reaches an upload step gated behind success.
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() && github.actor != 'dependabot[bot]' }}
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          report_type: test_results
+          files: junit.xml
           fail_ci_if_error: true
 
   build:

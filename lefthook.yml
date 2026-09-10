@@ -8,14 +8,17 @@
 # commit should not fail over a quote style a tool can settle by itself.
 pre-commit:
   jobs:
+    # Runs inside the pinned golang image rather than the host binary, so
+    # the version doing the work is go.mod's own `go` directive, not
+    # whatever the host package manager currently has — rules/go-mod.md.
     - name: gofmt
       glob: "*.go"
-      run: gofmt -w {staged_files}
+      run: scripts/go-docker.sh gofmt -w {staged_files}
       stage_fixed: true
 
     - name: golangci-lint
       glob: "*.go"
-      run: golangci-lint run ./...
+      run: scripts/golangci-lint-docker.sh golangci-lint run ./...
 
     # go mod edit -fmt is the canonicalizer for go.mod itself: a builtin `go`
     # subcommand, not gofmt (which never touches go.mod) and not `go mod tidy`
@@ -23,7 +26,7 @@ pre-commit:
     # doing).
     - name: gomod
       glob: "go.mod"
-      run: go mod edit -fmt go.mod
+      run: scripts/go-docker.sh go mod edit -fmt go.mod
       stage_fixed: true
 
     # Prettier decides the layout, markdownlint then judges what Prettier
@@ -45,6 +48,7 @@ pre-commit:
       glob: "*.md"
       exclude:
         - "CHANGELOG.md"
+        - ".claude/**"
       run: vale {staged_files}
 
     # Reads only, so it changes nothing to restage. Invoked bare rather than
@@ -88,13 +92,13 @@ pre-push:
   parallel: true
   jobs:
     - name: test
-      run: go test ./...
+      run: scripts/go-docker.sh go test ./...
 
     # No check-only flag on `go mod edit -fmt`, so the gate is running it
     # again and diffing. A no-op on a go.mod pre-commit already canonicalized;
     # only fails if that got bypassed.
     - name: gomod
-      run: go mod edit -fmt go.mod && git diff --exit-code go.mod
+      run: scripts/go-docker.sh go mod edit -fmt go.mod && git diff --exit-code go.mod
 
     # These are `package.json` scripts rather than the commands spelled out,
     # because CI runs the same ones and a literal copied into two files drifts
