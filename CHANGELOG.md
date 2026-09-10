@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.0](https://github.com/alrayyes/scaffold-go-api/compare/v0.3.1...v0.4.0) (2026-09-10)
+
+
+### Features
+
+* **ci:** add Codecov Test Analytics ([#31](https://github.com/alrayyes/scaffold-go-api/issues/31)) ([7e0bea1](https://github.com/alrayyes/scaffold-go-api/commit/7e0bea178d675cfc9dcc1aa89ff95aab0d340402)), closes [#27](https://github.com/alrayyes/scaffold-go-api/issues/27)
+
+
+### Bug Fixes
+
+* **hooks:** exclude .claude/** from the pre-commit vale check ([#30](https://github.com/alrayyes/scaffold-go-api/issues/30)) ([c33cc2a](https://github.com/alrayyes/scaffold-go-api/commit/c33cc2a96f9748b21942d121bec0ad1bdaa01df4))
+
 ## [0.3.1](https://github.com/alrayyes/scaffold-go-api/compare/v0.3.0...v0.3.1) (2026-09-09)
 
 
