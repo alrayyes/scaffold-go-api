@@ -45,6 +45,7 @@ pre-commit:
       glob: "*.md"
       exclude:
         - "CHANGELOG.md"
+        - ".claude/**"
       run: vale {staged_files}
 
     # Reads only, so it changes nothing to restage. Invoked bare rather than
