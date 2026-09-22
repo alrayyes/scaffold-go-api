@@ -15,3 +15,8 @@ CHANGELOG.md
 # Vale's style packages, downloaded by `vale sync`.
 /styles/Google/
 /styles/proselint/
+
+# Staged by the pages workflow from api/openapi.yaml right before
+# actions/upload-pages-artifact runs. Not committed — it's a copy, not a
+# second source of truth.
+/docs/openapi.yaml
