@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.0](https://github.com/alrayyes/scaffold-go-api/compare/v0.4.2...v0.5.0) (2026-09-22)
+
+
+### Features
+
+* **docs:** publish OpenAPI docs to GitHub Pages ([e3b419a](https://github.com/alrayyes/scaffold-go-api/commit/e3b419ab3644cdc117600a0d85e0e97febc593ab))
+* **docs:** publish OpenAPI docs to GitHub Pages ([bf897fd](https://github.com/alrayyes/scaffold-go-api/commit/bf897fd3c252e295969d61ed7e7b72d485f969ba))
+
 ## [0.4.2](https://github.com/alrayyes/scaffold-go-api/compare/v0.4.1...v0.4.2) (2026-09-10)
 
 
