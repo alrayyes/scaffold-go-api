@@ -11,6 +11,7 @@
       "GHCR",
       "Gitea",
       "Sigstore",
+      "Stoplight",
       "autodiscovered",
       "automerge",
       "commitlint-on-title",

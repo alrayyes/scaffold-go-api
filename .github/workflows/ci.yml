@@ -170,6 +170,40 @@ jobs:
       - name: redocly lint
         run: bun run lint:api -- --format=github-actions
 
+  # Publishes the Stoplight Elements docs page — the renderer for the same
+  # spec the `api` job lints. Lives in this workflow, not a separate one, so
+  # `needs: api` is a real dependency: GitHub can't express `needs` across
+  # workflow files, and the `api` job itself only runs on `push` to `main`
+  # and on `pull_request`, so gating here on the `push` event is what makes
+  # "merged and linted" the actual precondition rather than an assumption.
+  pages:
+    needs: api
+    if: github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Stage the spec beside the docs page
+        # The artifact below is docs/ alone, so a path outside it isn't
+        # reachable once Pages serves it — see docs/index.html's comment.
+        run: cp api/openapi.yaml docs/openapi.yaml
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: docs/
+      - uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+        id: deployment
+
   # A hook is something you can skip, and the version number depends on
   # these messages being right, so the whole branch is checked here too.
   commits:

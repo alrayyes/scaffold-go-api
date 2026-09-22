@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>scaffold-go-api</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://unpkg.com/@stoplight/elements@9.0.25/web-components.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@stoplight/elements@9.0.25/styles.min.css"
+    />
+  </head>
+  <body style="height: 100vh; margin: 0">
+    <!--
+      openapi.yaml here is a copy of api/openapi.yaml, staged by the pages
+      workflow right before actions/upload-pages-artifact runs — the
+      artifact is this directory alone, so a path outside it isn't reachable
+      once Pages serves it. Don't hand-edit this copy; it's overwritten on
+      every publish.
+    -->
+    <elements-api
+      apiDescriptionUrl="./openapi.yaml"
+      router="hash"
+      layout="responsive"
+    ></elements-api>
+  </body>
+</html>
