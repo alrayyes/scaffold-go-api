@@ -170,7 +170,7 @@ jobs:
       - name: redocly lint
         run: bun run lint:api -- --format=github-actions
 
-  # Publishes the Stoplight Elements docs page — the renderer for the same
+  # Publishes the Scalar docs page — the renderer for the same
   # spec the `api` job lints. Lives in this workflow, not a separate one, so
   # `needs: api` is a real dependency: GitHub can't express `needs` across
   # workflow files, and the `api` job itself only runs on `push` to `main`

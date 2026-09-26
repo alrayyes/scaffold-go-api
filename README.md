@@ -52,7 +52,7 @@ curl localhost:8080/widgets/hammer
 
 `api/openapi.yaml` is the contract both endpoints are held to — read it
 first if you're replacing the example resource with a real one. A
-Stoplight Elements docs page renders that same spec and publishes to
+Scalar docs page renders that same spec and publishes to
 GitHub Pages on every merge to `main`:
 <https://alrayyes.github.io/scaffold-go-api/>.
 
