@@ -48,3 +48,5 @@ erroring
 CI
 YAML
 JSON
+JUnit
+Cobertura

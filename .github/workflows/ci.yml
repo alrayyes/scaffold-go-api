@@ -56,9 +56,22 @@ jobs:
         # gotestsum instead of a bare `go test`, pinned exactly: same human
         # output as before, plus a JUnit report Codecov's Test Analytics
         # reads for failure/flake history.
+        #
+        # Pinned inline, so neither Renovate nor Dependabot sees the version
+        # here (or gocover-cobertura's, in scripts/assemble-reports.sh): bump
+        # both by hand.
         run: |
           go run gotest.tools/gotestsum@v1.13.0 --junitfile junit.xml -- \
             -race -covermode=atomic -coverprofile=coverage.out -coverpkg=./... ./...
+      # The report assembly in the `reports` job reads these two files.
+      - name: Upload test output
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: test-output
+          path: |
+            junit.xml
+            coverage.out
+          if-no-files-found: error
       - name: Report coverage
         if: ${{ !cancelled() }}
         run: |
@@ -88,6 +101,30 @@ jobs:
           report_type: test_results
           files: junit.xml
           fail_ci_if_error: true
+
+  # Assembles what Pages will publish. Runs on pull requests too, so a broken
+  # conversion fails before the merge; only the upload is push-only.
+  reports:
+    needs: test
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: test-output
+      - name: Assemble reports
+        run: scripts/assemble-reports.sh site/reports
+      - name: Upload reports
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: reports
+          path: site/reports
+          if-no-files-found: error
 
   build:
     runs-on: ubuntu-24.04
@@ -177,7 +214,7 @@ jobs:
   # and on `pull_request`, so gating here on the `push` event is what makes
   # "merged and linted" the actual precondition rather than an assumption.
   pages:
-    needs: api
+    needs: [api, reports]
     if: github.event_name == 'push'
     runs-on: ubuntu-24.04
     timeout-minutes: 5
@@ -193,16 +230,37 @@ jobs:
       cancel-in-progress: false
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Stage the spec beside the docs page
-        # The artifact below is docs/ alone, so a path outside it isn't
-        # reachable once Pages serves it — see docs/index.html's comment.
-        run: cp api/openapi.yaml docs/openapi.yaml
+      - name: Assemble the site
+        # One Pages deployment per repo, so docs and reports ship in one
+        # artifact: docs at the root, reports under /reports/. The spec is
+        # copied in because a path outside the artifact isn't reachable once
+        # Pages serves it — see docs/index.html's comment.
+        run: |
+          mkdir site
+          cp -r docs/. site/
+          cp api/openapi.yaml site/openapi.yaml
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: reports
+          path: site/reports
       - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
-          path: docs/
+          path: site/
       - uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
         id: deployment
+      # A local check proves the files, not the URL; the deploy succeeds
+      # either way. page_url is the real address, whatever this repo is
+      # called, and a user site (<owner>.github.io) serves it at the root, so
+      # the same /reports/ path holds for both.
+      - name: Smoke-test the live reports
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          curl --fail --silent --show-error --location --retry 6 \
+            --retry-delay 10 --retry-all-errors \
+            --output coverage.xml "${PAGE_URL%/}/reports/coverage/coverage.xml"
+          grep -q '<coverage ' coverage.xml
 
   # A hook is something you can skip, and the version number depends on
   # these messages being right, so the whole branch is checked here too.
