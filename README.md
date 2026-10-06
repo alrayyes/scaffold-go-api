@@ -56,6 +56,22 @@ Scalar docs page renders that same spec and publishes to
 GitHub Pages on every merge to `main`:
 <https://alrayyes.github.io/scaffold-go-api/>.
 
+### Reports
+
+Every merge to `main` publishes the test and coverage reports beside the
+docs, in the same Pages deployment:
+
+- Tests:
+  <https://apis.ryankes.eu/scaffold-go-api/reports/tests/unit.xml> (JUnit XML)
+- Coverage: <https://apis.ryankes.eu/scaffold-go-api/reports/coverage/> (HTML),
+  with `coverage.xml` (Cobertura) and `coverage.out` (Go profile) beside it
+
+A project generated from this template gets the same layout under its own
+Pages address. A `<owner>.github.io` repo serves from the root, so its
+reports land at `/reports/` with no repo-name prefix, and the workflow's
+smoke step uses the deployed `page_url`, so it holds for either. Pull
+requests run the assembly but deploy nothing.
+
 ### Docker
 
 The [Dockerfile](Dockerfile) builds a static binary into a distroless,

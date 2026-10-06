@@ -20,3 +20,6 @@ CHANGELOG.md
 # actions/upload-pages-artifact runs. Not committed — it's a copy, not a
 # second source of truth.
 /docs/openapi.yaml
+
+# Assembled by scripts/assemble-reports.sh for the Pages deploy.
+/site/
