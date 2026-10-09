@@ -16,9 +16,9 @@ pre-commit:
       run: scripts/go-docker.sh gofmt -w {staged_files}
       stage_fixed: true
 
-    - name: golangci-lint
-      glob: "*.go"
-      run: scripts/golangci-lint-docker.sh golangci-lint run ./...
+    # golangci-lint type-checks whole packages, so a shorter file list saves
+    # nothing and it can't judge just the commit. It runs at pre-push and in CI
+    # (rules/linting.md).
 
     # go mod edit -fmt is the canonicalizer for go.mod itself: a builtin `go`
     # subcommand, not gofmt (which never touches go.mod) and not `go mod tidy`
@@ -39,7 +39,9 @@ pre-commit:
 
     - name: markdownlint
       glob: "*.md"
-      run: bunx markdownlint-cli2 {staged_files}
+      # --no-globs: the `globs` in .markdownlint-cli2.yaml are added to any
+      # file list, so without it this lints the whole tree, not the commit.
+      run: bunx markdownlint-cli2 --no-globs {staged_files}
 
     # Fast enough for a commit. LTeX is not — around ten seconds a file — so
     # mechanics run at push instead, where the wait is paid once rather than
@@ -51,18 +53,8 @@ pre-commit:
         - ".claude/**"
       run: vale {staged_files}
 
-    # Reads only, so it changes nothing to restage. Invoked bare rather than
-    # on {staged_files}: what gets linted is the `apis` list in redocly.yaml,
-    # and naming a path here is how the hook and CI end up checking different
-    # files. The glob only decides whether it's worth running at all.
-    - name: redocly
-      glob:
-        - "api/*.yaml"
-        - "api/*.yml"
-        - "api/**/*.yaml"
-        - "api/**/*.yml"
-        - "redocly.yaml"
-      run: bunx redocly lint
+    # redocly lints the `apis` list in redocly.yaml and takes no staged list,
+    # so it runs at pre-push and in CI.
 
     # Pinned by digest rather than `latest`, like any other container image —
     # dependencies.md's rule applies to an image named in a hook command just
@@ -97,6 +89,9 @@ pre-push:
     # No check-only flag on `go mod edit -fmt`, so the gate is running it
     # again and diffing. A no-op on a go.mod pre-commit already canonicalized;
     # only fails if that got bypassed.
+    - name: golangci-lint
+      run: scripts/golangci-lint-docker.sh golangci-lint run ./...
+
     - name: gomod
       run: scripts/go-docker.sh go mod edit -fmt go.mod && git diff --exit-code go.mod
 
