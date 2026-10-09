@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.1](https://github.com/alrayyes/scaffold-go-api/compare/v0.5.0...v0.5.1) (2026-10-09)
+
+
+### Bug Fixes
+
+* **hooks:** run golangci-lint and redocly only at pre-push ([#55](https://github.com/alrayyes/scaffold-go-api/issues/55)) ([0acf026](https://github.com/alrayyes/scaffold-go-api/commit/0acf0261d22adfec210298d5642e9a779e403c20))
+
 ## [0.5.0](https://github.com/alrayyes/scaffold-go-api/compare/v0.4.2...v0.5.0) (2026-09-22)
 
 
