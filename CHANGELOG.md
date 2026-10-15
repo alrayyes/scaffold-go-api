@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.2](https://github.com/alrayyes/scaffold-go-api/compare/v0.5.1...v0.5.2) (2026-10-15)
+
+
+### Bug Fixes
+
+* **ci:** run release-auto-merge when the autorelease label is added ([#60](https://github.com/alrayyes/scaffold-go-api/issues/60)) ([01b59a9](https://github.com/alrayyes/scaffold-go-api/commit/01b59a99d638e1b37609d83223c32e2088e32c8e)), closes [#59](https://github.com/alrayyes/scaffold-go-api/issues/59)
+
 ## [0.5.1](https://github.com/alrayyes/scaffold-go-api/compare/v0.5.0...v0.5.1) (2026-10-09)
 
 
