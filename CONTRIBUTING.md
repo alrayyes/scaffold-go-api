@@ -16,6 +16,9 @@ This file is for whoever changes this template. The
   that version rather than whichever is current: when the two disagree, the
   hook passes and the pipeline fails, and the reason isn't obvious from the
   failure.
+- **[gitleaks](https://github.com/gitleaks/gitleaks)** on your `PATH`, which
+  the commit and push hooks run to catch a pasted secret. CI runs it pinned
+  in a container.
 - **[Vale](https://vale.sh)** on your `PATH`, for the style tier of the
   prose lint:
 

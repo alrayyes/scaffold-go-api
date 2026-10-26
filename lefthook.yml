@@ -32,6 +32,10 @@ pre-commit:
     # Prettier decides the layout, markdownlint then judges what Prettier
     # produced. The other order has markdownlint fixing something Prettier is
     # about to overwrite.
+    # The index only: what is about to be committed, never the working tree.
+    - name: gitleaks
+      run: gitleaks git --staged --redact --no-banner
+
     - name: prettier
       glob: "*.{md,yml,yaml}"
       run: bunx prettier --write {staged_files}
@@ -83,6 +87,11 @@ commit-msg:
 pre-push:
   parallel: true
   jobs:
+    # Whole history: a small repo scans it in a moment, so the hook and CI scan
+    # the same thing and there is no range to get wrong (rules/secrets.md).
+    - name: gitleaks
+      run: gitleaks git --redact --no-banner
+
     - name: test
       run: scripts/go-docker.sh go test ./...
 

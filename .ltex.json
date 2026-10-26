@@ -30,6 +30,7 @@
       "devDependencies",
       "distroless",
       "goreleaser",
+      "gitleaks",
       "golangci",
       "golangci-lint",
       "hadolint",
