@@ -50,3 +50,4 @@ YAML
 JSON
 JUnit
 Cobertura
+gitleaks
