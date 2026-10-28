@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.3](https://github.com/alrayyes/scaffold-go-api/compare/v0.5.2...v0.5.3) (2026-10-28)
+
+
+### Bug Fixes
+
+* **ci:** stop release-auto-merge cancelling its own labeled run ([#73](https://github.com/alrayyes/scaffold-go-api/issues/73)) ([fff93dd](https://github.com/alrayyes/scaffold-go-api/commit/fff93ddbe06babdbd43566dd3bc17c4d14dc3e1f))
+
 ## [0.5.2](https://github.com/alrayyes/scaffold-go-api/compare/v0.5.1...v0.5.2) (2026-10-15)
 
 
