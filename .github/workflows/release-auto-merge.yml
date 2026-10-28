@@ -25,10 +25,11 @@ permissions:
   contents: write
   pull-requests: write
 
-# Never cancel: the opened run skips (no label yet) and the labeled run
-# lands a second later in the same group. Cancelling in progress would kill
-# the labeled run, the only one that arms auto-merge. Re-arming is
-# idempotent, so queued duplicates are harmless.
+# Don't cancel in-progress runs: the opened run skips (no label yet) and the
+# labeled run lands a second later in the same group. Cancelling would kill
+# the labeled run, the only one that arms auto-merge. A newer pending run may
+# still replace an older one, which is fine: every run after the label lands
+# re-arms auto-merge, and re-arming is idempotent.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
