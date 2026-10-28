@@ -25,10 +25,13 @@ permissions:
   contents: write
   pull-requests: write
 
-# A second push to the same pull request makes the first run pointless.
+# Never cancel: the opened run skips (no label yet) and the labeled run
+# lands a second later in the same group. Cancelling in progress would kill
+# the labeled run, the only one that arms auto-merge. Re-arming is
+# idempotent, so queued duplicates are harmless.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   auto-merge:
