@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.4](https://github.com/alrayyes/scaffold-go-api/compare/v0.5.3...v0.5.4) (2026-10-31)
+
+
+### Bug Fixes
+
+* **ci:** drop build provenance so releases pass on free-plan private repos ([#76](https://github.com/alrayyes/scaffold-go-api/issues/76)) ([1fad3b5](https://github.com/alrayyes/scaffold-go-api/commit/1fad3b5032ff2b97f1d00c8e89b55fd04c6f1f8a)), closes [#75](https://github.com/alrayyes/scaffold-go-api/issues/75)
+
 ## [0.5.3](https://github.com/alrayyes/scaffold-go-api/compare/v0.5.2...v0.5.3) (2026-10-28)
 
 
