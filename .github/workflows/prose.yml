@@ -17,6 +17,8 @@ on:
       - "**/*.md"
       - .vale.ini
       - .ltex.json
+      - scripts/lint-mechanics.sh
+      - scripts/test-lint-mechanics.sh
       - styles/**
       - .github/workflows/prose.yml
   pull_request:
@@ -24,6 +26,8 @@ on:
       - "**/*.md"
       - .vale.ini
       - .ltex.json
+      - scripts/lint-mechanics.sh
+      - scripts/test-lint-mechanics.sh
       - styles/**
       - .github/workflows/prose.yml
   workflow_dispatch:
@@ -74,6 +78,17 @@ jobs:
         run: |
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
           ./scripts/lint-mechanics.sh
+
+  # The hook's own cases, and shellcheck over them. Outside the mechanics
+  # container, which carries neither shellcheck nor a reason to.
+  mechanics-hook:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Check the mechanics hook
+        run: ./scripts/test-lint-mechanics.sh && shellcheck scripts/test-lint-mechanics.sh
 
   style:
     runs-on: ubuntu-24.04
