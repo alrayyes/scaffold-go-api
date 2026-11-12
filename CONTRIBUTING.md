@@ -56,8 +56,13 @@ bun run format:check       # prettier --check, add --write to fix
 bun run lint:md
 bun run lint:api           # redocly lint, bare — no path argument
 bun run lint:prose         # vale
-bun run lint:mechanics     # ltex-cli-plus
+bun run lint:mechanics     # ltex-cli-plus: grammar and spelling, every document
 ```
+
+The pre-push hook runs these over the whole tree, except grammar and spelling:
+that checks only the Markdown in your push, and all of it when `.ltex.json` or
+`scripts/lint-mechanics.sh` changed, so a push with no prose never starts the
+JVM. CI checks every document.
 
 ## How it fits together
 
